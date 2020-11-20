@@ -1,10 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PolyclinicApi.Models;
+﻿using PolyclinicApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace PolyclinicApi.Data
 {
@@ -40,18 +37,19 @@ namespace PolyclinicApi.Data
 
         public IEnumerable<Event> GetDate(int PatientId)
         {
-            var appointments = GetAllAppointmentsById(PatientId);
+            var appointments = GetAllAppointmentsById(PatientId).Select(a => a.ServiceId);
             var events = _context.Event
                 .Where(e => e.AppointmentId == null)
-                .ToList();
+                .ToList().GroupBy(e=>e.DateTime.Date);
 
-            var test = from app in appointments
-                   join even in events
-                   on app.ServiceId equals even.ServiceId
-                   orderby even.DateTime
-                   select even;
-            return test;
-            // 
+            foreach (IGrouping<DateTime, Event> e in events)
+            {
+                if (e.Select(e => e.ServiceId).SequenceEqual(appointments))
+                {
+                    return e;
+                }
+            }
+            return null;
         }
 
         public Event GetEventById(int id)
