@@ -10,9 +10,10 @@ namespace PolyclinicApi.Data
 
         }
 
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<Service> Services { get; set; }
-        public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<Event> Events { get; set; }
+        public DbSet<Patient> Patient { get; set; }
+        public DbSet<Service> Service { get; set; }
+        public DbSet<Appointment> Appointment { get; set; }
+        public DbSet<Event> Event { get; set; }
+
     }
 }
